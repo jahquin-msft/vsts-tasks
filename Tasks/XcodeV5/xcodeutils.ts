@@ -205,6 +205,19 @@ export function uploadLogFile(logFile: string) {
     }
 }
 
+export function publishXcodeTelemetry(telemetryData: { [key: string]: any; }) {
+    // This check can be removed when we compile with --strict-null-check.
+    if (!telemetryData) {
+        return;
+    }
+    try {
+        tl.assertAgent('2.120.0');
+        console.log('##vso[telemetry.publish area=Tasks.CrossPlatform;feature=Xcode]' + JSON.stringify(telemetryData));
+    } catch (err) {
+        tl.debug('Failed to publish Xcode telemetry: ' + err);
+    }
+}
+
 function agentSupportsTaskState() {
     let agentSupportsTaskState = true;
     try {
